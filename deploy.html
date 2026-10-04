@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            astryx: {
+              canvas: '#06080F',
+              subtle: '#0D111D',
+              surface: '#111726',
+              elevated: '#172033',
+              border: 'rgba(255, 255, 255, 0.08)',
+              borderFocus: '#00F0FF',
+              primary: '#00F0FF',
+              secondary: '#2563EB',
+              accent: '#00F0FF',
+            }
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 35px -5px rgba(0, 240, 255, 0.35)',
+            'glow-cobalt': '0 0 35px -5px rgba(37, 99, 235, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --astryx-cyan: #00F0FF;
+      --astryx-cobalt: #2563EB;
+      --astryx-bg: #06080F;
+    }
+    body {
+      background-color: #06080F;
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .astryx-mesh {
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 15% 70%, rgba(56, 189, 248, 0.10) 0%, transparent 50%);
+    }
+    .astryx-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+    .glass-card {
+      background: rgba(17, 23, 38, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(0, 240, 255, 0.3);
+      box-shadow: 0 12px 36px -10px rgba(0, 240, 255, 0.15);
+    }
+    .crt-screen {
+      background: #020612;
+      border: 3px solid #1E293B;
+      box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.15), 0 0 15px rgba(0, 240, 255, 0.2);
+      position: relative;
+    }
+    .crt-screen::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 10;
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+    }
+    .text-balance {
+      text-wrap: balance;
+    }
+    @keyframes wave {
+      0%, 100% { height: 8px; }
+      50% { height: 32px; }
+    }
+    .animate-wave {
+      animation: wave 1.2s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+  </style>
+
+  <title>Cẩm Nang Triển Khai &amp; Nạp Firmware • Musedy S3 (Deployment Guide)</title>
+  <meta name="description" content="Hướng dẫn từng bước biên dịch và nạp firmware cho robot Musedy S3 bằng ESP-IDF, Kconfig, cấu hình Wi-Fi BLE và chẩn đoán CLI.">
+</head>
+<body class="astryx-mesh astryx-grid min-h-screen antialiased selection:bg-cyan-500 selection:text-black">
+  
+  <!-- TOP STATUS BANNER (Meta Astryx Telemetry) -->
+  <div class="border-b border-white/5 bg-black/40 backdrop-blur-md px-3 sm:px-4 py-1.5 text-xs font-mono text-slate-400">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <span class="inline-flex items-center gap-1.5 shrink-0">
+          <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-emerald-400 font-semibold tracking-wider text-[11px] sm:text-xs">SYSTEM ONLINE</span>
+        </span>
+        <span class="text-white/20 hidden sm:inline">|</span>
+        <span class="hidden sm:inline text-slate-400">CORE: ESP32-S3 DUAL-CORE 240MHz</span>
+        <span class="hidden md:inline text-white/20">|</span>
+        <span class="hidden md:inline text-slate-400">DISPLAY: 240x240 GC9A01 SPI &amp; ST7789</span>
+      </div>
+      <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
+        <span class="text-cyan-400 text-[11px] sm:text-xs font-semibold">FW: v1.2-MUSEDY</span>
+        <span class="text-white/20 hidden sm:inline">|</span>
+        <a href="https://github.com/tody-agent/musedy" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-300 transition-colors hidden sm:inline">GITHUB: tody-agent/musedy</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-astryx-canvas/80 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo Brand -->
+      <a href="index.html" class="flex items-center space-x-3 group shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-black text-lg shadow-glow-cyan">
+          M
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-base tracking-tight text-white group-hover:text-cyan-400 transition-colors">
+            MUSEDY<span class="text-cyan-400 font-black">.S3</span>
+          </span>
+          <span class="text-[10px] font-mono tracking-widest text-slate-400 uppercase -mt-1">Retro AI Companion</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-medium text-slate-300">
+        <a href="index.html#showcase" class="px-3 py-1.5 rounded-lg hover:text-cyan-300 hover:bg-slate-800/60 transition-colors">01. Vỏ Máy Tính</a>
+        <a href="index.html#simulator" class="px-3 py-1.5 rounded-lg hover:text-cyan-300 hover:bg-slate-800/60 transition-colors">02. Trải Nghiệm Giọng Nói</a>
+        <a href="wiring.html" class="px-3 py-1.5 rounded-lg text-cyan-400 hover:text-cyan-300 hover:bg-slate-800/60 transition-colors">03. Sơ Đồ Kết Nối</a>
+        <a href="deploy.html" class="px-3 py-1.5 rounded-lg text-sky-400 hover:text-sky-300 hover:bg-slate-800/60 transition-colors">04. Hướng Dẫn Triển Khai</a>
+        <a href="index.html#specs" class="px-3 py-1.5 rounded-lg hover:text-cyan-300 hover:bg-slate-800/60 transition-colors">05. Thông Số STL</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <a href="https://github.com/tody-agent/musedy" target="_blank" rel="noopener noreferrer" 
+           class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-white/15 bg-slate-800/40 text-xs font-semibold text-white hover:bg-slate-800 hover:border-cyan-400/50 hover:text-cyan-300 transition-all whitespace-nowrap">
+          <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+          GitHub Repo
+        </a>
+        <a href="index.html#simulator" 
+           class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 active:scale-95 transition-all whitespace-nowrap shadow-glow-cyan">
+          <svg class="w-4 h-4 shrink-0 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+          <span>Thử Ngay</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- PAGE HERO -->
+  <section class="py-12 md:py-16 border-b border-white/10 bg-black/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-3">
+        <a href="index.html" class="hover:underline">Musedy.S3</a>
+        <span>/</span>
+        <span class="text-slate-400">Deployment Documentation</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight text-balance">
+        Hướng Dẫn Triển Khai &amp; Nạp Firmware Musedy S3
+      </h1>
+      <p class="mt-3 text-slate-300 text-sm sm:text-base max-w-3xl text-balance">
+        Quy trình chuẩn hóa từ sao chép mã nguồn, chạy 174 bài host test kiểm tra dung sai, cấu hình Kconfig, biên dịch và nạp firmware vào vi điều khiển <strong>ESP32-S3</strong>.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-3 pt-6">
+        <a href="https://github.com/tody-agent/musedy/blob/main/docs/DEPLOYMENT_GUIDE.md" target="_blank" rel="noopener noreferrer"
+           class="px-4 py-2 rounded-xl bg-cyan-400 text-black font-bold text-xs hover:bg-cyan-300 transition-all flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Xem File Markdown (DEPLOYMENT_GUIDE.md)
+        </a>
+        <a href="wiring.html"
+           class="px-4 py-2 rounded-xl border border-white/20 bg-slate-800/40 text-white font-medium text-xs hover:border-cyan-400/50 hover:text-cyan-300 transition-all">
+          Xem Sơ Đồ Đi Dây Phần Cứng →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP BY STEP DEPLOYMENT FLOW -->
+  <section class="py-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      
+      <!-- Step 1 -->
+      <div class="glass-card p-6 sm:p-8 rounded-3xl border border-white/10">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-xl bg-cyan-400/20 border border-cyan-400/40 text-cyan-300 font-mono font-bold flex items-center justify-center text-sm">
+            01
+          </span>
+          <h2 class="text-xl font-bold text-white">Sao Chép Mã Nguồn &amp; Kiểm Thử Tự Động</h2>
+        </div>
+        <p class="text-sm text-slate-300 mb-4">
+          Trước khi kết nối phần cứng, hãy chạy bộ 174 bài test tự động trên máy tính để đảm bảo môi trường và thuật toán VAD, Edge TTS và dung sai vỏ máy tính đều hoạt động hoàn hảo:
+        </p>
+        <div class="space-y-3 font-mono text-xs">
+          <div class="p-3.5 rounded-xl bg-black border border-white/10 text-cyan-300 select-all">
+            <code>git clone https://github.com/tody-agent/musedy.git &amp;&amp; cd musedy</code>
+          </div>
+          <div class="p-3.5 rounded-xl bg-black border border-white/10 text-sky-300 select-all">
+            <code>DEVELOPER_DIR=/Library/Developer/CommandLineTools ./test_host.sh</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="glass-card p-6 sm:p-8 rounded-3xl border border-white/10">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 text-sky-300 font-mono font-bold flex items-center justify-center text-sm">
+            02
+          </span>
+          <h2 class="text-xl font-bold text-white">Chọn Cấu Hình Thiết Bị (Device Overlay)</h2>
+        </div>
+        <p class="text-sm text-slate-300 mb-4">
+          Nạp cấu hình tối ưu sẵn cho bo mạch Bread-S3 kèm màn hình tròn GC9A01 1.28":
+        </p>
+        <div class="space-y-3 font-mono text-xs">
+          <div class="p-3.5 rounded-xl bg-black border border-white/10 text-sky-300 select-all">
+            <code>idf.py set-target esp32s3</code>
+          </div>
+          <div class="p-3.5 rounded-xl bg-black border border-white/10 text-sky-300 select-all">
+            <code>cp devices/sdkconfig.muse-bread-s3 sdkconfig</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="glass-card p-6 sm:p-8 rounded-3xl border border-white/10">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-xl bg-blue-400/20 border border-blue-400/40 text-blue-300 font-mono font-bold flex items-center justify-center text-sm">
+            03
+          </span>
+          <h2 class="text-xl font-bold text-white">Biên Dịch &amp; Nạp Firmware (Flash &amp; Monitor)</h2>
+        </div>
+        <p class="text-sm text-slate-300 mb-4">
+          Cắm cáp Type-C kết nối ESP32-S3 với máy tính và thực hiện nạp:
+        </p>
+        <div class="space-y-3 font-mono text-xs">
+          <div class="p-3.5 rounded-xl bg-black border border-white/10 text-blue-300 select-all">
+            <code>idf.py build</code>
+          </div>
+          <div class="p-3.5 rounded-xl bg-black border border-white/10 text-emerald-300 select-all">
+            <code>idf.py -p /dev/cu.usbmodem1101 flash monitor</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="glass-card p-6 sm:p-8 rounded-3xl border border-white/10">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-xl bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 font-mono font-bold flex items-center justify-center text-sm">
+            04
+          </span>
+          <h2 class="text-xl font-bold text-white">Cấu Hình Wi-Fi &amp; Các Lệnh CLI Nhanh</h2>
+        </div>
+        <p class="text-sm text-slate-300 mb-4">
+          Gửi lệnh qua cửa sổ Serial Monitor (115200 baud) để kích hoạt:
+        </p>
+        <div class="space-y-2.5 font-mono text-xs">
+          <div class="p-3 rounded-xl bg-black/60 border border-white/10 flex justify-between items-center text-slate-300">
+            <span>&gt;wifi=Ten_Wifi,Mat_Khau_Wifi</span>
+            <span class="text-cyan-400 text-[11px]">Lưu mạng &amp; Kết nối</span>
+          </div>
+          <div class="p-3 rounded-xl bg-black/60 border border-white/10 flex justify-between items-center text-slate-300">
+            <span>&gt;say=Xin chào! Mình là robot Musedy!</span>
+            <span class="text-sky-400 text-[11px]">Phát âm tức thì qua loa</span>
+          </div>
+          <div class="p-3 rounded-xl bg-black/60 border border-white/10 flex justify-between items-center text-slate-300">
+            <span>&gt;diag</span>
+            <span class="text-emerald-400 text-[11px]">Báo cáo sức khỏe chip &amp; RAM</span>
+          </div>
+          <div class="p-3 rounded-xl bg-black/60 border border-white/10 flex justify-between items-center text-slate-300">
+            <span>&gt;wakeup=on</span>
+            <span class="text-amber-400 text-[11px]">Bật nhận diện giọng nói thường trực</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 py-12 bg-astryx-canvas text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <!-- Brand & Copyright -->
+      <div class="flex items-center space-x-3">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center font-bold text-black text-sm">
+          M
+        </div>
+        <div>
+          <div class="text-white font-bold">MUSEDY S3 ROBOTICS</div>
+          <div class="text-[11px] text-slate-400">Thiết kế bởi cộng đồng Maker • Mã nguồn mở theo giấy phép Apache-2.0</div>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="flex flex-wrap items-center gap-6 font-mono text-[11px]">
+        <a href="wiring.html" class="hover:text-cyan-400 transition-colors">Sơ Đồ Kết Nối</a>
+        <a href="deploy.html" class="hover:text-cyan-400 transition-colors">Hướng Dẫn Triển Khai</a>
+        <a href="https://github.com/tody-agent/musedy" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-400 transition-colors">GitHub Repository</a>
+        <span class="text-white/20">|</span>
+        <span class="text-cyan-300">OpenDesign &amp; Meta Astryx System</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
