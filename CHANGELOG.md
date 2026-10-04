@@ -1,6 +1,28 @@
-# 📋 Changelog - Rody S3 Meta Muse Edition
+# 📋 Changelog - Musedy S3 (Retro Computer Edition)
 
-Toàn bộ lịch sử các thay đổi, tối ưu hóa kiến trúc, tính năng mới và các bản vá cho dự án **Rody S3 Meta Muse Edition** (`firmware_muse/`).
+Toàn bộ lịch sử các thay đổi, tối ưu hóa kiến trúc, tính năng mới và các bản vá cho dự án **Musedy S3**.
+
+---
+
+## [v1.6.0-musedy] - 2026-10-04
+
+### 🖥️ Nâng Cấp Màn Hình 1.8" TFT Xoay Ngang 160x128 (Retro Computer Landscape Edition)
+- **Tương Thích Hoàn Hảo Vỏ Máy Tính Retro (MakerWorld #1967811):**
+  - Chuyển đổi màn hình chính sang chuẩn **1.8" TFT LCD xoay ngang 160x128 (ST7735 / ST7789 SPI)**, tỉ lệ 5:4 cổ điển ăn khớp với cửa sổ màn hình $44.87 \times 44.47\text{ mm}$ của chi tiết `obj_2_Object_1.stl`.
+- **Driver Chuẩn ESP-IDF `esp_lcd_panel_st7735`:**
+  - Viết mới bộ driver C thuần [`components/muse/esp_lcd_panel_st7735.h`](file:///Volumes/Builder/Arduino/musedy/components/muse/esp_lcd_panel_st7735.h) và [`components/muse/esp_lcd_panel_st7735.c`](file:///Volumes/Builder/Arduino/musedy/components/muse/esp_lcd_panel_st7735.c).
+  - Tích hợp xoay trục `esp_lcd_panel_swap_xy(s_panel, true)` và căn chỉnh gương `esp_lcd_panel_mirror(s_panel, false, true)` để hiển thị đúng hướng ngang (Landscape).
+  - Hỗ trợ căn lề pixel GRAM (`x_gap`, `y_gap`) cho tất cả các biến thể panel ST7735 Green Tab / Red Tab / Black Tab.
+- **Ngàm In 3D Chuyên Dụng Cho Màn Hình 1.8" (`cad/`):**
+  - Thiết kế file OpenSCAD [`cad/musedy_computer_18_adapter.scad`](file:///Volumes/Builder/Arduino/musedy/cad/musedy_computer_18_adapter.scad) và file binary STL [`cad/stl/musedy_computer_18_adapter.stl`](file:///Volumes/Builder/Arduino/musedy/cad/stl/musedy_computer_18_adapter.stl).
+  - Kích thước đế ngàm $48.40 \times 48.00 \times 1.60\text{ mm}$ đặt lọt khít rãnh âm mặt trước, viền vát CRT $45^\circ$ ôm khít vùng hiển thị $35.5 \times 28.5\text{ mm}$, có rãnh thoát cáp SPI 8 chân $22.0 \times 6.5\text{ mm}$.
+- **Preset Cấu Hình Thiết Bị & Kconfig:**
+  - Bổ sung `CONFIG_MUSE_DISPLAY_180_LANDSCAPE` làm cấu hình mặc định trong Kconfig.
+  - Tạo preset thiết bị chuyên biệt [`devices/sdkconfig.muse-computer-18`](file:///Volumes/Builder/Arduino/musedy/devices/sdkconfig.muse-computer-18).
+- **Bộ Kiểm Thử Mới (181 Tests Passed):**
+  - Bổ sung [`tests/test_display_config.py`](file:///Volumes/Builder/Arduino/musedy/tests/test_display_config.py); toàn bộ 181/181 unit tests đều vượt qua 100%.
+- **Nâng Cấp Web & Simulator Trực Tuyến:**
+  - Trang chủ [https://tody-agent.github.io/musedy/](https://tody-agent.github.io/musedy/) tích hợp nút chuyển đổi giao diện ảo 1.8" Ngang & 1.28" Tròn mượt mà.
 
 ---
 
