@@ -29,22 +29,25 @@ Bộ file in trong thư mục `firmware_muse/Computer/电脑小智_stls` bao g�
 
 ## 3. Hai Phương Án Lắp Ráp Phần Cứng (Hardware Integration Options)
 
-### Phương Án A (Khuyên Dùng): Tận Dụng Màn Hình Tròn GC9A01 1.28" (Phong Cách Màn Hình CRT Bo Cong Cổ Điển)
-Nếu bạn đang có sẵn màn hình tròn **GC9A01 1.28" SPI (240x240)** đã được viết driver trong dự án:
+### Phương Án A (Khuyên Dùng Nhất Cho Vỏ Máy Tính): Màn Hình 1.8" TFT 160x128 Xoay Ngang (ST7735 / ST7789)
+Màn hình chữ nhật 1.8" TFT (128x160 native, xoay ngang thành 160x128) mang lại trải nghiệm màn hình máy tính CRT cổ điển tỉ lệ 5:4 chân thực nhất:
 
-1. **In thêm chi tiết chuyển đổi siêu nhỏ:**  
-   Sử dụng file CAD [`firmware_muse/cad/xiaozhi_gc9a01_adapter.scad`](file:///Volumes/Builder/Arduino/OtooRobot/firmware_muse/cad/xiaozhi_gc9a01_adapter.scad) (in mất khoảng 15 phút, tốn ~5g nhựa):
+1. **Ngàm in 3D chuyên dụng:**  
+   Sử dụng file CAD [`cad/musedy_computer_18_adapter.scad`](file:///Volumes/Builder/Arduino/musedy/cad/musedy_computer_18_adapter.scad) hoặc file STL đã tạo sẵn [`cad/stl/musedy_computer_18_adapter.stl`](file:///Volumes/Builder/Arduino/musedy/cad/stl/musedy_computer_18_adapter.stl) (in ~18 phút, tốn ~6g nhựa):
    ```bash
-   openscad -o firmware_muse/cad/stl/xiaozhi_gc9a01_adapter.stl -D '$fn=96' firmware_muse/cad/xiaozhi_gc9a01_adapter.scad
+   python3 cad/build_adapter_stl.py
+   # hoặc: openscad -o cad/stl/musedy_computer_18_adapter.stl -D '$fn=96' cad/musedy_computer_18_adapter.scad
    ```
-2. **Ngàm khớp hoàn hảo:** Tấm chuyển đổi có gờ $48.4 \times 48.0\text{ mm}$ đặt lọt khít vào rãnh ngàm của `obj_2_Object_1.stl`, tạo thành viền vát CRT giữ chặt màn hình tròn GC9A01 ở chính giữa mà không cần sửa vỏ xanh ngoài.
-3. **Firmware:** Giữ nguyên cấu hình `CONFIG_MUSE_BOARD_BREAD_S3` (GC9A01 240x240 RGB565) đã được tối ưu mượt mà 30 FPS.
+2. **Ngàm khớp hoàn hảo:** Tấm chuyển đổi có kích thước ngoài $48.4 \times 48.0\text{ mm}$ đặt lọt khít vào rãnh ngàm của `obj_2_Object_1.stl`, gờ trước $44.4 \times 44.0\text{ mm}$ vươn ra cửa sổ phía trước, khung cửa sổ vát $45^\circ$ ôm trọn vùng hiển thị $35.5 \times 28.5\text{ mm}$ của màn hình 1.8" TFT.
+3. **Firmware:** Đã cấu hình mặc định trong `devices/sdkconfig.muse-computer-18` và `devices/sdkconfig.muse-bread-s3` (`CONFIG_MUSE_DISPLAY_180_LANDSCAPE=y`).
 
-### Phương Án B: Sử Dụng Màn Hình Vuông / Chữ Nhật 2.0" ST7789 (Bộ Kit Xiaozhi Tiêu Chuẩn)
-Nếu bạn sử dụng bo mạch tích hợp Xiaozhi kèm màn hình chữ nhật 2.0 inch (ST7789 240x320 hoặc 240x280) và camera FPC OV2640:
-1. Màn hình 2.0" được lắp trực tiếp vào rãnh chữ nhật $48.84 \times 48.33\text{ mm}$ của `obj_2_Object_1.stl`.
-2. Camera FPC cắm vào mắt tròn phía trên góc trái.
-3. Loa hộp chữ nhật (cavity box speaker) dán băng keo 2 mặt vào đáy khoang sau của `obj_3_Object_4.stl`.
+### Phương Án B: Tận Dụng Màn Hình Tròn GC9A01 1.28" (Phong Cách Màn Hình CRT Bo Tròn)
+Nếu bạn có sẵn màn hình tròn **GC9A01 1.28" SPI (240x240)**:
+1. **In ngàm chuyển đổi tròn:** Sử dụng file CAD [`cad/xiaozhi_gc9a01_adapter.scad`](file:///Volumes/Builder/Arduino/musedy/cad/xiaozhi_gc9a01_adapter.scad).
+2. **Firmware:** Bật cờ `CONFIG_MUSE_DISPLAY_GC9A01_ROUND=y` trong Kconfig.
+
+### Phương Án C: Màn Hình Chữ Nhật 2.0" ST7789 (Bộ Kit Xiaozhi Tiêu Chuẩn)
+Màn hình 2.0" ST7789 được lắp trực tiếp vào rãnh chữ nhật $48.84 \times 48.33\text{ mm}$ của `obj_2_Object_1.stl`.
 
 ---
 

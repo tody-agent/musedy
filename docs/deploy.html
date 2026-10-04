@@ -124,7 +124,7 @@
         <span class="text-white/20 hidden sm:inline">|</span>
         <span class="hidden sm:inline text-slate-400">CORE: ESP32-S3 DUAL-CORE 240MHz</span>
         <span class="hidden md:inline text-white/20">|</span>
-        <span class="hidden md:inline text-slate-400">DISPLAY: 240x240 GC9A01 SPI &amp; ST7789</span>
+        <span class="hidden md:inline text-slate-400">DISPLAY: 1.8" LANDSCAPE 160x128 (ST7735 / ST7789)</span>
       </div>
       <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
         <span class="text-cyan-400 text-[11px] sm:text-xs font-semibold">FW: v1.2-MUSEDY</span>
@@ -239,14 +239,14 @@
           <h2 class="text-xl font-bold text-white">Chọn Cấu Hình Thiết Bị (Device Overlay)</h2>
         </div>
         <p class="text-sm text-slate-300 mb-4">
-          Nạp cấu hình tối ưu sẵn cho bo mạch Bread-S3 kèm màn hình tròn GC9A01 1.28":
+          Nạp cấu hình tối ưu sẵn cho Musedy S3 (mặc định màn hình 1.8" xoay ngang 160x128 ST7735 cho vỏ máy tính retro):
         </p>
         <div class="space-y-3 font-mono text-xs">
           <div class="p-3.5 rounded-xl bg-black border border-white/10 text-sky-300 select-all">
             <code>idf.py set-target esp32s3</code>
           </div>
           <div class="p-3.5 rounded-xl bg-black border border-white/10 text-sky-300 select-all">
-            <code>cp devices/sdkconfig.muse-bread-s3 sdkconfig</code>
+            <code>cp devices/sdkconfig.muse-computer-18 sdkconfig   # Hoặc sdkconfig.muse-bread-s3</code>
           </div>
         </div>
       </div>

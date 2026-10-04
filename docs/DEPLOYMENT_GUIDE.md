@@ -50,7 +50,8 @@ Dự án cung cấp sẵn cấu hình tối ưu cho các mẫu phần cứng kh�
 
 | Tên Cấu Hình | Màn Hình | Mục Đích Sử Dụng |
 | :--- | :--- | :--- |
-| **`devices/sdkconfig.muse-bread-s3`** | **GC9A01 1.28" Tròn** | Khuyên dùng cho Robot Musedy (Vỏ máy tính retro có ngàm adapter hoặc Vỏ cầu Astro-Pod) |
+| **`devices/sdkconfig.muse-computer-18`** | **1.8" TFT 160x128 Xoay Ngang** | Khuyên dùng cho Vỏ máy tính retro (MakerWorld #1967811) kèm ngàm in 3D |
+| **`devices/sdkconfig.muse-bread-s3`** | **1.8" Landscape / GC9A01 1.28"** | Cấu hình mặc định cho bo mạch Musedy S3 đa năng |
 | **`devices/sdkconfig.muse`** | **ST7789 2.0" Vuông** | Dành cho mẫu máy tính Xiaozhi tiêu chuẩn |
 
 Áp dụng cấu hình chuẩn:
@@ -58,8 +59,8 @@ Dự án cung cấp sẵn cấu hình tối ưu cho các mẫu phần cứng kh�
 # Thiết lập target là ESP32-S3
 idf.py set-target esp32s3
 
-# Nạp file cấu hình chuẩn của Musedy S3 (Bread-S3 + GC9A01 Round)
-cp devices/sdkconfig.muse-bread-s3 sdkconfig
+# Nạp file cấu hình chuẩn Musedy Computer (1.8" TFT 160x128 Xoay Ngang)
+cp devices/sdkconfig.muse-computer-18 sdkconfig
 ```
 
 Hoặc tùy chỉnh trực quan qua menu:
@@ -67,8 +68,10 @@ Hoặc tùy chỉnh trực quan qua menu:
 idf.py menuconfig
 ```
 *Các tùy chọn quan trọng:*
+- `Component config -> Muse -> Display Panel & Resolution for Musedy S3`:
+  - `CONFIG_MUSE_DISPLAY_180_LANDSCAPE`: Màn hình 1.8" TFT 160x128 xoay ngang ST7735.
+  - `CONFIG_MUSE_DISPLAY_GC9A01_ROUND`: Màn hình tròn 1.28" GC9A01 240x240.
 - `Component config -> Muse Configuration`:
-  - `CONFIG_MUSE_BOARD_BREAD_S3`: Kích hoạt driver màn hình tròn GC9A01 và pinout chuẩn.
   - `CONFIG_MUSE_VOICE_WAKEUP`: Bật/tắt nhận diện từ khóa giọng nói ("Rody ơi" / "Musedy").
   - `CONFIG_MUSE_FREE_TTS`: Bật tính năng phát âm thanh tiếng Việt miễn phí (Edge / Google TTS).
 

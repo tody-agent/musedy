@@ -2,16 +2,16 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![ESP-IDF](https://img.shields.io/badge/ESP--IDF-v5.1%2B-red.svg)](https://idf.espressif.com/)
-[![Tests](https://img.shields.io/badge/Tests-174%20Passed-emerald.svg)](./test_host.sh)
+[![Tests](https://img.shields.io/badge/Tests-181%20Passed-emerald.svg)](./test_host.sh)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-cyan.svg)](https://tody-agent.github.io/musedy/)
 [![MakerWorld](https://img.shields.io/badge/MakerWorld-%231967811-blue.svg)](https://makerworld.com/en/models/1967811-xiaozhi-ai-computer-xiaozhi#profileId-2115633)
 
 **Musedy S3** là robot trí tuệ nhân tạo để bàn thế hệ mới, kết hợp hoàn hảo giữa hình hài máy tính cổ điển Macintosh CRT thập niên 80 (màu Xanh Dương & Trắng Sữa) với bộ vi xử lý lõi kép **ESP32-S3 N16R8**:
 - 🗣️ **Voice Wakeup kích hoạt tức thì:** Nhận diện từ khóa giọng nói ("Rody ơi" / "Musedy") và tự động ngắt lời (Barge-in).
 - 🎙️ **Giọng nói tiếng Việt mượt mà:** Tích hợp engine Zero-Token Edge TTS & Google Translate TTS, không tốn chi phí API token.
-- 📺 **Màn hình màu tròn 1.28" GC9A01 SPI:** Hiển thị cảm xúc mắt linh hoạt (5 trạng thái: Standby, Happy, Listening, Speaking, Thinking) 30 FPS.
+- 📺 **Màn hình 1.8" TFT 160x128 Xoay Ngang (ST7735 / ST7789):** Tỉ lệ hiển thị ngang 5:4 chuẩn cho khung vỏ máy tính retro, và tùy chọn 1.28" tròn GC9A01 240x240, 30 FPS mượt mà.
 - 🔊 **Âm học loa vòm 3W dội sàn:** Mạch giải mã I2S MAX98357A kết hợp buồng kín chống đoản mạch âm, cho chất âm trầm ấm rõ tiếng.
-- 📐 **Hỗ trợ 2 phong cách vỏ in 3D:** Mẫu Máy Tính Retro Xiaozhi Computer Edition & Quả Cầu Astro-Pod kèm tai Mecha tháo rời.
+- 📐 **Hỗ trợ 2 phong cách vỏ in 3D:** Mẫu Máy Tính Retro Xiaozhi Computer Edition (kèm ngàm in 3D `cad/stl/musedy_computer_18_adapter.stl`) & Quả Cầu Astro-Pod.
 
 ---
 
@@ -29,7 +29,7 @@
 
 | Thiết Bị | Chân Module | Chân ESP32-S3 | Ghi Chú Kỹ Thuật |
 | :--- | :--- | :---: | :--- |
-| **Màn Hình GC9A01** | SCLK / MOSI / DC / RST / CS / BLK | **42, 41, 40, 39, 38, 21** | 240x240 SPI Master 40MHz, PWM Backlight |
+| **Màn Hình 1.8" / GC9A01** | SCLK / MOSI / DC / RST / CS / BLK | **42, 41, 40, 39, 38, 21** | 160x128 Landscape ST7735 / 240x240 GC9A01, SPI Master 40MHz, PWM Backlight |
 | **Micro I2S INMP441** | WS / SCK / SD / L/R | **4, 5, 6, GND** | Kênh Trái (Left Channel), thu âm đa hướng |
 | **Ampli MAX98357A** | BCLK / LRC / DIN / VIN | **15, 16, 7, 5V (VBUS)** | Nguồn 5V cho công suất 3W RMS (Loa 4Ω) |
 | **6-DOF IMU MPU6050** | SDA / SCL | **8, 9** | I2C0 Master, nhận diện nghiêng/lắc/rơi |
@@ -40,12 +40,12 @@
 
 ## 🚀 Hướng Dẫn Bắt Đầu Nhanh (Quick Start)
 
-### 1. Kiểm thử mã nguồn trước trên máy tính (174 tests)
+### 1. Kiểm thử mã nguồn trước trên máy tính (181 tests)
 ```bash
 git clone https://github.com/tody-agent/musedy.git
 cd musedy
 
-# Chạy toàn bộ 174 test tự động không cần cắm mạch:
+# Chạy toàn bộ 181 test tự động không cần cắm mạch:
 DEVELOPER_DIR=/Library/Developer/CommandLineTools ./test_host.sh
 ```
 
@@ -54,8 +54,8 @@ DEVELOPER_DIR=/Library/Developer/CommandLineTools ./test_host.sh
 # Thiết lập target ESP32-S3
 idf.py set-target esp32s3
 
-# Áp dụng cấu hình chuẩn (Bread-S3 + Màn hình tròn GC9A01 1.28")
-cp devices/sdkconfig.muse-bread-s3 sdkconfig
+# Áp dụng cấu hình chuẩn Musedy Computer (Màn hình 1.8" TFT 160x128 Xoay Ngang)
+cp devices/sdkconfig.muse-computer-18 sdkconfig
 
 # Biên dịch mã nguồn
 idf.py build

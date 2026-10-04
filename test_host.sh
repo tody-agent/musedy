@@ -7,6 +7,6 @@ cd "$SCRIPT_DIR"
 
 export DEVELOPER_DIR="/Library/Developer/CommandLineTools"
 
-echo "=== Running Meta Muse Gadget SDK Host Tests (157 unit tests) ==="
+echo "=== Running Musedy SDK Host Tests (181 unit tests) ==="
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 echo "=== All Tests Passed Successfully! ==="

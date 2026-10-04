@@ -43,6 +43,7 @@
 #include "freertos/task.h"
 
 #include "esp_lcd_panel_gc9a01.h"
+#include "esp_lcd_panel_st7735.h"
 #include "muse_audio.h"
 #include "muse_board.h"
 #include "muse_mem.h"
@@ -51,6 +52,34 @@
 static const char *TAG = "board";
 
 #define LCD_RES 240
+
+#if defined(CONFIG_MUSE_DISPLAY_GC9A01_ROUND)
+#define LCD_WIDTH 240
+#define LCD_HEIGHT 240
+#define LCD_IS_ROUND true
+#define LCD_DIAGONAL 1.28f
+#define BOARD_NAME "Musedy S3 Round Pet"
+#define LCD_TALK_HINT_ALIGN LV_ALIGN_BOTTOM_RIGHT
+#define LCD_TALK_HINT_X -12
+#define LCD_TALK_HINT_Y -12
+#define LCD_AUX_HINT_ALIGN LV_ALIGN_BOTTOM_LEFT
+#define LCD_AUX_HINT_X 12
+#define LCD_AUX_HINT_Y -12
+#else
+// Default: 1.8" 160x128 Landscape ST7735/ST7789 (Retro Computer Edition)
+#define LCD_WIDTH 160
+#define LCD_HEIGHT 128
+#define LCD_IS_ROUND false
+#define LCD_DIAGONAL 1.8f
+#define BOARD_NAME "Musedy S3 Retro Computer (1.8\" Landscape)"
+#define LCD_TALK_HINT_ALIGN LV_ALIGN_BOTTOM_RIGHT
+#define LCD_TALK_HINT_X -6
+#define LCD_TALK_HINT_Y -4
+#define LCD_AUX_HINT_ALIGN LV_ALIGN_BOTTOM_LEFT
+#define LCD_AUX_HINT_X 6
+#define LCD_AUX_HINT_Y -4
+#endif
+
 #define LCD_HOST SPI2_HOST
 #define LCD_SCLK GPIO_NUM_42
 #define LCD_MOSI GPIO_NUM_41
@@ -58,7 +87,7 @@ static const char *TAG = "board";
 #define LCD_RST GPIO_NUM_39
 #define LCD_CS GPIO_NUM_38
 #define LCD_BL GPIO_NUM_21
-#define DRAW_BUF_LINES 40
+#define DRAW_BUF_LINES 32
 
 #define I2C_SDA GPIO_NUM_8
 #define I2C_SCL GPIO_NUM_9
@@ -178,7 +207,7 @@ static lv_display_t *display_start(lv_indev_t **touch)
         .miso_io_num = GPIO_NUM_NC,
         .quadwp_io_num = GPIO_NUM_NC,
         .quadhd_io_num = GPIO_NUM_NC,
-        .max_transfer_sz = LCD_RES * DRAW_BUF_LINES * sizeof(uint16_t),
+        .max_transfer_sz = LCD_WIDTH * DRAW_BUF_LINES * sizeof(uint16_t),
     };
     if (spi_bus_initialize(LCD_HOST, &bus_cfg, SPI_DMA_CH_AUTO) != ESP_OK) {
         ESP_LOGE(TAG, "spi_bus_initialize failed");
@@ -200,7 +229,8 @@ static lv_display_t *display_start(lv_indev_t **touch)
         return NULL;
     }
 
-    // 4. Panel GC9A01 Init
+#if defined(CONFIG_MUSE_DISPLAY_GC9A01_ROUND)
+    // 4. Panel GC9A01 Init (240x240 Round)
     const esp_lcd_panel_dev_config_t panel_cfg = {
         .reset_gpio_num = LCD_RST,
         .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_BGR,
@@ -215,6 +245,36 @@ static lv_display_t *display_start(lv_indev_t **touch)
     esp_lcd_panel_init(s_panel);
     esp_lcd_panel_invert_color(s_panel, true);
     esp_lcd_panel_disp_on_off(s_panel, true);
+#else
+    // 4. Panel ST7735 1.8" 128x160 Landscape Init
+    const esp_lcd_panel_dev_config_t panel_cfg = {
+        .reset_gpio_num = LCD_RST,
+        .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,
+        .bits_per_pixel = 16,
+    };
+    if (esp_lcd_new_panel_st7735(s_io, &panel_cfg, &s_panel) != ESP_OK) {
+        ESP_LOGE(TAG, "esp_lcd_new_panel_st7735 failed");
+        return NULL;
+    }
+
+    esp_lcd_panel_reset(s_panel);
+    esp_lcd_panel_init(s_panel);
+#if defined(CONFIG_MUSE_DISPLAY_INVERT) && CONFIG_MUSE_DISPLAY_INVERT
+    esp_lcd_panel_invert_color(s_panel, true);
+#else
+    esp_lcd_panel_invert_color(s_panel, false);
+#endif
+    // Set landscape orientation: swap XY and mirror row/col
+    esp_lcd_panel_swap_xy(s_panel, true);
+    esp_lcd_panel_mirror(s_panel, false, true);
+
+#if defined(CONFIG_MUSE_DISPLAY_ST7735_X_GAP) && defined(CONFIG_MUSE_DISPLAY_ST7735_Y_GAP)
+    esp_lcd_panel_set_gap(s_panel, CONFIG_MUSE_DISPLAY_ST7735_X_GAP, CONFIG_MUSE_DISPLAY_ST7735_Y_GAP);
+#else
+    esp_lcd_panel_set_gap(s_panel, 0, 0);
+#endif
+    esp_lcd_panel_disp_on_off(s_panel, true);
+#endif
 
     // 5. Register with esp_lv_adapter (Native RGB565 full-color rendering)
     esp_lv_adapter_config_t adapter_cfg = ESP_LV_ADAPTER_DEFAULT_CONFIG();
@@ -231,8 +291,8 @@ static lv_display_t *display_start(lv_indev_t **touch)
         .profile = {
             .interface = ESP_LV_ADAPTER_PANEL_IF_OTHER,
             .rotation = ESP_LV_ADAPTER_ROTATE_0,
-            .hor_res = LCD_RES,
-            .ver_res = LCD_RES,
+            .hor_res = LCD_WIDTH,
+            .ver_res = LCD_HEIGHT,
             .buffer_height = DRAW_BUF_LINES,
             .use_psram = false,
             .require_double_buffer = true,
@@ -244,7 +304,8 @@ static lv_display_t *display_start(lv_indev_t **touch)
         ESP_LOGE(TAG, "esp_lv_adapter_start failed");
         return NULL;
     }
-    ESP_LOGI(TAG, "GC9A01 240x240 round display started with LVGL 9 (RGB565 full color)");
+    ESP_LOGI(TAG, "%s display started with LVGL 9 (%dx%d RGB565)",
+             BOARD_NAME, LCD_WIDTH, LCD_HEIGHT);
     return disp;
 }
 
@@ -475,19 +536,24 @@ static esp_err_t power_off(void)
     return ESP_FAIL;
 }
 
-/* ---------- Board Descriptor: Round 1.28" 240x240 GC9A01 ---------- */
+/* ---------- Board Descriptor: 1.8" Landscape 160x128 / 1.28" Round GC9A01 ---------- */
 static const muse_board_t s_board = {
-    .name = "Rody S3 Round Pet",
-    .width = LCD_RES,
-    .height = LCD_RES,
+    .name = BOARD_NAME,
+    .width = LCD_WIDTH,
+    .height = LCD_HEIGHT,
+#if defined(CONFIG_MUSE_DISPLAY_GC9A01_ROUND)
     .round = true,              /* Native round layout with circular progress ring bezel */
-    .touch = false,
     .diagonal_in = 1.28f,       /* 1.28 inch round screen */
+#else
+    .round = false,             /* 1.8" Landscape 160x128 rectangular CRT frame */
+    .diagonal_in = 1.8f,        /* 1.8 inch landscape screen */
+#endif
+    .touch = false,
     .keyboard = false,
     .talk_button = "BOOT",
     .aux_button = "GPIO47",
-    .talk_hint = { LV_ALIGN_BOTTOM_RIGHT, -12, -12 },
-    .aux_hint = { LV_ALIGN_BOTTOM_LEFT, 12, -12 },
+    .talk_hint = { LCD_TALK_HINT_ALIGN, LCD_TALK_HINT_X, LCD_TALK_HINT_Y },
+    .aux_hint = { LCD_AUX_HINT_ALIGN, LCD_AUX_HINT_X, LCD_AUX_HINT_Y },
     .frame_ms = 33,             /* 30 FPS smooth animation */
     .init = init,
     .display_start = display_start,

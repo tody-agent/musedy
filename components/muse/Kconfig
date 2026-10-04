@@ -68,9 +68,47 @@ menu "Muse"
             depends on IDF_TARGET_ESP32S3
 
         config MUSE_BOARD_BREAD_S3
-            bool "Bread S3 (ESP32-S3 N16R8, OLED 128x64, INMP441, MAX98357A, Pet Sensors)"
+            bool "Musedy S3 (ESP32-S3 N16R8, 1.8\" Landscape 160x128 / 1.28\" Round, INMP441, MAX98357A)"
             depends on IDF_TARGET_ESP32S3
     endchoice
+
+    choice MUSE_DISPLAY_TYPE
+        prompt "Display Panel & Resolution for Musedy S3"
+        depends on MUSE_BOARD_BREAD_S3
+        default MUSE_DISPLAY_180_LANDSCAPE
+        help
+            Select the screen attached to Musedy S3:
+            - 1.8" 160x128 Landscape ST7735/ST7789 for Retro Computer Case (Recommended)
+            - 1.28" 240x240 Round GC9A01 for Circular Desktop Pet
+
+        config MUSE_DISPLAY_180_LANDSCAPE
+            bool "1.8\" 160x128 Landscape ST7735/ST7789 (Retro Computer Edition)"
+
+        config MUSE_DISPLAY_GC9A01_ROUND
+            bool "1.28\" 240x240 Round GC9A01 (Circular Pet Edition)"
+    endchoice
+
+    config MUSE_DISPLAY_ST7735_X_GAP
+        int "ST7735 Column Gap (X offset)"
+        depends on MUSE_DISPLAY_180_LANDSCAPE
+        default 0
+        help
+            Pixel offset for ST7735 GRAM addressing (0 for black/red tab, 1 for green tab).
+
+    config MUSE_DISPLAY_ST7735_Y_GAP
+        int "ST7735 Row Gap (Y offset)"
+        depends on MUSE_DISPLAY_180_LANDSCAPE
+        default 0
+        help
+            Pixel offset for ST7735 GRAM addressing (0 for black/red tab, 2 for green tab).
+
+    config MUSE_DISPLAY_INVERT
+        bool "Invert display colors"
+        depends on MUSE_DISPLAY_180_LANDSCAPE
+        default n
+        help
+            Invert colors for ST7735 IPS / TN panel variants.
+
 
     config MUSE_ENABLED
         bool

@@ -70,6 +70,16 @@ PARTS = [
         "layer_height": "0.12mm (FDM) or 0.05mm (Resin)",
         "file": "xiaozhi_gc9a01_adapter.scad",
     },
+    {
+        "name": "musedy_computer_18_adapter",
+        "description": "1.8\" Landscape 160x128 LCD Adapter Bezel for Retro Computer Case (MakerWorld #1967811)",
+        "material": "Resin / PLA+ Matte",
+        "color": "Vintage Computer Warm White",
+        "orientation": "Rear flange flat on build plate",
+        "infill": "100%",
+        "layer_height": "0.12mm (FDM) or 0.05mm (Resin)",
+        "file": "musedy_computer_18_adapter.scad",
+    },
 ]
 
 

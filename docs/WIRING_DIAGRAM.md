@@ -41,19 +41,21 @@
 
 ## 2. Bảng Tra Cứu Pinout Chi Tiết (Pin Mapping Matrix)
 
-### 2.1. Màn Hình Tròn 1.28" IPS GC9A01 SPI (240x240 RGB565)
-| Ký Hiệu Chân Màn Hình | Chân ESP32-S3 | Màu Dây Gợi Ý | Chức Năng Kỹ Thuật |
+### 2.1. Màn Hình 1.8" TFT 160x128 Xoay Ngang (ST7735 / ST7789 SPI) & GC9A01 1.28"
+| Ký Hiệu Chân Màn Hình (ST7735 / GC9A01) | Chân ESP32-S3 | Màu Dây Gợi Ý | Chức Năng Kỹ Thuật |
 | :--- | :---: | :---: | :--- |
-| **VCC** | **3.3V** | Đỏ | Nguồn cấp cho chip điều khiển màn hình |
-| **GND** | **GND** | Đen | Nối mass hệ thống |
-| **SCL / SCLK** | **GPIO 42** | Vàng | Xung nhịp SPI Clock (40MHz SPI Master) |
+| **VCC** | **3.3V (hoặc 5V)** | Đỏ | Nguồn cấp cho chip điều khiển màn hình và đèn nền |
+| **GND** | **GND** | Đen | Nối mass chung hệ thống |
+| **SCL / SCLK / SCK** | **GPIO 42** | Vàng | Xung nhịp SPI Clock (40MHz SPI Master DMA) |
 | **SDA / MOSI** | **GPIO 41** | Xanh lá | Đường truyền dữ liệu hình ảnh (Data Out) |
-| **DC / RS** | **GPIO 40** | Cam | Lựa chọn Lệnh (Command) / Dữ liệu (Data) |
-| **RES / RST** | **GPIO 39** | Trắng | Reset phần cứng màn hình (Active Low) |
-| **CS** | **GPIO 38** | Xanh dương | Chip Select (Active Low) |
-| **BLK / BL** | **GPIO 21** | Tím | Điều chế độ sáng đèn nền LED qua PWM (LEDC) |
+| **DC / A0 / RS** | **GPIO 40** | Cam | Lựa chọn Lệnh (Command) / Dữ liệu (Data) |
+| **RES / RST / RESET** | **GPIO 39** | Trắng | Reset phần cứng màn hình (Active Low) |
+| **CS** | **GPIO 38** | Xanh dương | Chip Select chọn chip màn hình (Active Low) |
+| **BLK / LED / BL** | **GPIO 21** | Tím | Điều chế độ sáng đèn nền LED qua PWM (LEDC) |
 
-> 💡 *Nếu dùng màn hình ST7789 2.0" chữ nhật (bộ kit Xiaozhi tiêu chuẩn): Sơ đồ chân SPI tương tự, firmware tự động nhận diện theo cấu hình Kconfig.*
+> 💡 **Khả năng tương thích:**  
+> - **Màn hình 1.8" TFT 128x160 (ST7735 / ST7789):** Chuẩn 8 chân cắm SPI phổ biến nhất trong giới maker. Firmware tự động xoay ngang 160x128 pixel (`swap_xy = true`) phù hợp hoàn hảo với tỷ lệ 5:4 của cửa sổ vỏ máy tính retro `Computer/obj_2_Object_1.stl`.  
+> - **Màn hình tròn 1.28" IPS GC9A01 (240x240):** Dùng chung hoàn toàn sơ đồ chân GPIO 38–42, 21. Có thể chuyển đổi qua lại dễ dàng chỉ bằng 1 tùy chọn Kconfig.
 
 ---
 

@@ -1,6 +1,8 @@
-# Musedy S3 Retro Computer & Pet: ESP32-S3 N16R8 (8 MB octal PSRAM, 16 MB flash),
-# 1.8" 160x128 Landscape ST7735/ST7789 LCD (Retro Computer Edition),
-# INMP441 + MAX98357A I2S simplex, Touch sensor on GPIO2, Backlight PWM on GPIO21.
+# Musedy S3 Retro Computer (MakerWorld #1967811 Case Edition):
+# ESP32-S3 N16R8 (8 MB octal PSRAM, 16 MB flash),
+# 1.8" 160x128 Landscape ST7735/ST7789 SPI LCD,
+# INMP441 Microphone (I2S0 RX) + MAX98357A 3W I2S DAC/Amp (I2S1 TX),
+# Pet Head Touch sensor on GPIO2, Backlight PWM on GPIO21.
 # Load last, after sdkconfig.defaults and devices/sdkconfig.muse.
 
 CONFIG_IDF_TARGET="esp32s3"

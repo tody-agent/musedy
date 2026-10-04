@@ -144,7 +144,7 @@ NAV_HEADER = '''
         <span class="text-white/20 hidden sm:inline">|</span>
         <span class="hidden sm:inline text-slate-400">CORE: ESP32-S3 DUAL-CORE 240MHz</span>
         <span class="hidden md:inline text-white/20">|</span>
-        <span class="hidden md:inline text-slate-400">DISPLAY: 240x240 GC9A01 SPI &amp; ST7789</span>
+        <span class="hidden md:inline text-slate-400">DISPLAY: 1.8" LANDSCAPE 160x128 (ST7735 / ST7789)</span>
       </div>
       <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
         <span class="text-cyan-400 text-[11px] sm:text-xs font-semibold">FW: v1.2-MUSEDY</span>
@@ -294,7 +294,7 @@ def generate_index_html():
           <!-- Verified Hardware compatibility note -->
           <div class="flex items-center gap-3 pt-2 text-xs text-slate-400 font-mono">
             <span class="inline-block w-2 h-2 rounded-full bg-cyan-400"></span>
-            <span>Hỗ trợ cả 2 chuẩn màn hình: 1.28" Tròn (GC9A01) &amp; 2.0" Vuông (ST7789)</span>
+            <span>Màn hình 1.8" xoay ngang 160x128 ST7735 (Chuẩn Vỏ Retro) &amp; tùy chọn 1.28" Tròn (GC9A01)</span>
           </div>
 
         </div>
@@ -396,8 +396,8 @@ def generate_index_html():
             </div>
 
             <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>ROUND GC9A01 / ST7789</span>
-              <span class="text-cyan-400">COLOR 16-BIT RGB565</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> 1.8" LANDSCAPE 160x128 (ST7735 / ST7789)</span>
+              <span class="text-cyan-400 font-bold">16-BIT RGB565 • 5:4 RATIO</span>
             </div>
           </div>
         </div>
@@ -560,17 +560,17 @@ def generate_index_html():
         <div class="glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between group h-full">
           <div>
             <div class="w-12 h-12 rounded-2xl bg-sky-400/10 border border-sky-500/30 flex items-center justify-center text-sky-400 mb-5">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             </div>
-            <span class="text-xs font-mono text-sky-400 uppercase tracking-wider">INNOVATIVE ADAPTER</span>
-            <h3 class="text-xl font-bold text-white mt-1 mb-2 text-balance">Ngàm Chuyển Đổi Màn Hình Tròn CRT</h3>
+            <span class="text-xs font-mono text-sky-400 uppercase tracking-wider">1.8" LANDSCAPE ADAPTER</span>
+            <h3 class="text-xl font-bold text-white mt-1 mb-2 text-balance">Ngàm Màn Hình 1.8" Xoay Ngang (160x128)</h3>
             <p class="text-slate-300 text-sm leading-relaxed">
-              Tấm chuyển đổi thông minh <code class="text-cyan-300 text-xs">xiaozhi_gc9a01_adapter.scad</code> biến cửa sổ vuông 44.9mm thành khung màn hình bóng đèn CRT tròn vintage, khớp hoàn hảo với GC9A01 1.28".
+              Tấm ngàm chuyển đổi thông minh <code class="text-cyan-300 text-xs">musedy_computer_18_adapter.scad</code> và file STL lắp lọt khít màn hình 1.8" TFT 160x128 ST7735 vào hốc cửa sổ 44.9mm của vỏ máy tính retro, mang lại tỷ lệ hiển thị ngang 5:4 hoàn hảo!
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>IN NHANH: ~15 PHÚT (~5G)</span>
-            <span class="text-sky-400">100% KHÍT NGÀM</span>
+            <span>IN NHANH: ~18 PHÚT (~6G)</span>
+            <span class="text-sky-400">KHỚP 100% CỬA SỔ</span>
           </div>
         </div>
 
@@ -807,10 +807,20 @@ def generate_index_html():
                 <td class="px-6 py-4">Layer 0.12mm, Infill 100%</td>
                 <td class="px-6 py-4 text-emerald-400 font-bold">✓ PASSED (Friction Fit)</td>
               </tr>
-              <tr class="hover:bg-slate-800/40 transition-colors bg-cyan-950/20">
+              <tr class="hover:bg-slate-800/40 transition-colors bg-cyan-950/30">
                 <td class="px-6 py-4 font-bold text-cyan-300 flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                  xiaozhi_gc9a01_adapter.scad (Ngàm CRT)
+                  musedy_computer_18_adapter.scad (Ngàm 1.8" Landscape)
+                </td>
+                <td class="px-6 py-4">48.40 x 48.00 x 3.40 mm</td>
+                <td class="px-6 py-4 text-slate-200">PLA+ / Resin Trắng Kem</td>
+                <td class="px-6 py-4">Layer 0.12mm, Infill 100%</td>
+                <td class="px-6 py-4 text-emerald-400 font-bold">✓ PASSED (ST7735 160x128)</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40 transition-colors bg-slate-900/30">
+                <td class="px-6 py-4 font-medium text-slate-300 flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                  xiaozhi_gc9a01_adapter.scad (Ngàm GC9A01 Tròn)
                 </td>
                 <td class="px-6 py-4">48.40 x 48.00 x 3.40 mm</td>
                 <td class="px-6 py-4 text-slate-200">PLA+ / Resin Trắng Kem</td>
@@ -1032,28 +1042,28 @@ def generate_wiring_html():
             <div class="flex items-center justify-between pb-3 mb-4 border-b border-white/10">
               <span class="flex items-center gap-2 text-cyan-400 font-bold text-sm">
                 <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-                1. MÀN HÌNH TRÒN 1.28" GC9A01 (SPI MASTER)
+                1. MÀN HÌNH 1.8" TFT 160x128 XOAY NGANG (ST7735 / ST7789 SPI)
               </span>
               <span class="text-xs font-mono text-slate-400">40MHz SPI</span>
             </div>
             <table class="w-full text-xs font-mono">
               <thead class="text-slate-400 border-b border-white/5">
-                <tr><th class="py-2">Chân GC9A01</th><th>Chân ESP32-S3</th><th>Màu Dây</th></tr>
+                <tr><th class="py-2">Chân 1.8" TFT / GC9A01</th><th>Chân ESP32-S3</th><th>Màu Dây</th></tr>
               </thead>
               <tbody class="divide-y divide-white/5 text-slate-300">
-                <tr><td class="py-2 font-bold text-white">VCC</td><td class="text-cyan-400">3.3V</td><td>Đỏ</td></tr>
+                <tr><td class="py-2 font-bold text-white">VCC</td><td class="text-cyan-400">3.3V (hoặc 5V)</td><td>Đỏ</td></tr>
                 <tr><td class="py-2 font-bold text-white">GND</td><td class="text-cyan-400">GND</td><td>Đen</td></tr>
-                <tr><td class="py-2 font-bold text-white">SCL / SCLK</td><td class="text-cyan-400 font-bold">GPIO 42</td><td>Vàng</td></tr>
+                <tr><td class="py-2 font-bold text-white">SCK / SCL</td><td class="text-cyan-400 font-bold">GPIO 42</td><td>Vàng</td></tr>
                 <tr><td class="py-2 font-bold text-white">SDA / MOSI</td><td class="text-cyan-400 font-bold">GPIO 41</td><td>Xanh lá</td></tr>
-                <tr><td class="py-2 font-bold text-white">DC / RS</td><td class="text-cyan-400 font-bold">GPIO 40</td><td>Cam</td></tr>
-                <tr><td class="py-2 font-bold text-white">RES / RST</td><td class="text-cyan-400 font-bold">GPIO 39</td><td>Trắng</td></tr>
+                <tr><td class="py-2 font-bold text-white">A0 / DC</td><td class="text-cyan-400 font-bold">GPIO 40</td><td>Cam</td></tr>
+                <tr><td class="py-2 font-bold text-white">RESET / RES</td><td class="text-cyan-400 font-bold">GPIO 39</td><td>Trắng</td></tr>
                 <tr><td class="py-2 font-bold text-white">CS</td><td class="text-cyan-400 font-bold">GPIO 38</td><td>Xanh dương</td></tr>
-                <tr><td class="py-2 font-bold text-white">BLK (PWM)</td><td class="text-cyan-400 font-bold">GPIO 21</td><td>Tím</td></tr>
+                <tr><td class="py-2 font-bold text-white">LED / BLK (PWM)</td><td class="text-cyan-400 font-bold">GPIO 21</td><td>Tím</td></tr>
               </tbody>
             </table>
           </div>
           <div class="mt-4 pt-3 border-t border-white/10 text-[11px] text-slate-400">
-            * Cáp đi thẳng, chiều dài &le; 48mm để không suy hao tần số cao 40MHz.
+            * Module 1.8" TFT 8 chân (ST7735 / ST7789) dùng chung sơ đồ chân SPI với màn hình tròn GC9A01. Firmware Musedy tự động xoay ngang 160x128.
           </div>
         </div>
 
@@ -1252,14 +1262,14 @@ def generate_deploy_html():
           <h2 class="text-xl font-bold text-white">Chọn Cấu Hình Thiết Bị (Device Overlay)</h2>
         </div>
         <p class="text-sm text-slate-300 mb-4">
-          Nạp cấu hình tối ưu sẵn cho bo mạch Bread-S3 kèm màn hình tròn GC9A01 1.28":
+          Nạp cấu hình tối ưu sẵn cho Musedy S3 (mặc định màn hình 1.8" xoay ngang 160x128 ST7735 cho vỏ máy tính retro):
         </p>
         <div class="space-y-3 font-mono text-xs">
           <div class="p-3.5 rounded-xl bg-black border border-white/10 text-sky-300 select-all">
             <code>idf.py set-target esp32s3</code>
           </div>
           <div class="p-3.5 rounded-xl bg-black border border-white/10 text-sky-300 select-all">
-            <code>cp devices/sdkconfig.muse-bread-s3 sdkconfig</code>
+            <code>cp devices/sdkconfig.muse-computer-18 sdkconfig   # Hoặc sdkconfig.muse-bread-s3</code>
           </div>
         </div>
       </div>

@@ -124,7 +124,7 @@
         <span class="text-white/20 hidden sm:inline">|</span>
         <span class="hidden sm:inline text-slate-400">CORE: ESP32-S3 DUAL-CORE 240MHz</span>
         <span class="hidden md:inline text-white/20">|</span>
-        <span class="hidden md:inline text-slate-400">DISPLAY: 240x240 GC9A01 SPI &amp; ST7789</span>
+        <span class="hidden md:inline text-slate-400">DISPLAY: 1.8" LANDSCAPE 160x128 (ST7735 / ST7789)</span>
       </div>
       <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
         <span class="text-cyan-400 text-[11px] sm:text-xs font-semibold">FW: v1.2-MUSEDY</span>
@@ -236,7 +236,7 @@
           <!-- Verified Hardware compatibility note -->
           <div class="flex items-center gap-3 pt-2 text-xs text-slate-400 font-mono">
             <span class="inline-block w-2 h-2 rounded-full bg-cyan-400"></span>
-            <span>Hỗ trợ cả 2 chuẩn màn hình: 1.28" Tròn (GC9A01) &amp; 2.0" Vuông (ST7789)</span>
+            <span>Màn hình 1.8" xoay ngang 160x128 ST7735 (Chuẩn Vỏ Retro) &amp; tùy chọn 1.28" Tròn (GC9A01)</span>
           </div>
 
         </div>
@@ -338,8 +338,8 @@
             </div>
 
             <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>ROUND GC9A01 / ST7789</span>
-              <span class="text-cyan-400">COLOR 16-BIT RGB565</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> 1.8" LANDSCAPE 160x128 (ST7735 / ST7789)</span>
+              <span class="text-cyan-400 font-bold">16-BIT RGB565 • 5:4 RATIO</span>
             </div>
           </div>
         </div>
@@ -502,17 +502,17 @@
         <div class="glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between group h-full">
           <div>
             <div class="w-12 h-12 rounded-2xl bg-sky-400/10 border border-sky-500/30 flex items-center justify-center text-sky-400 mb-5">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             </div>
-            <span class="text-xs font-mono text-sky-400 uppercase tracking-wider">INNOVATIVE ADAPTER</span>
-            <h3 class="text-xl font-bold text-white mt-1 mb-2 text-balance">Ngàm Chuyển Đổi Màn Hình Tròn CRT</h3>
+            <span class="text-xs font-mono text-sky-400 uppercase tracking-wider">1.8" LANDSCAPE ADAPTER</span>
+            <h3 class="text-xl font-bold text-white mt-1 mb-2 text-balance">Ngàm Màn Hình 1.8" Xoay Ngang (160x128)</h3>
             <p class="text-slate-300 text-sm leading-relaxed">
-              Tấm chuyển đổi thông minh <code class="text-cyan-300 text-xs">xiaozhi_gc9a01_adapter.scad</code> biến cửa sổ vuông 44.9mm thành khung màn hình bóng đèn CRT tròn vintage, khớp hoàn hảo với GC9A01 1.28".
+              Tấm ngàm chuyển đổi thông minh <code class="text-cyan-300 text-xs">musedy_computer_18_adapter.scad</code> và file STL lắp lọt khít màn hình 1.8" TFT 160x128 ST7735 vào hốc cửa sổ 44.9mm của vỏ máy tính retro, mang lại tỷ lệ hiển thị ngang 5:4 hoàn hảo!
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>IN NHANH: ~15 PHÚT (~5G)</span>
-            <span class="text-sky-400">100% KHÍT NGÀM</span>
+            <span>IN NHANH: ~18 PHÚT (~6G)</span>
+            <span class="text-sky-400">KHỚP 100% CỬA SỔ</span>
           </div>
         </div>
 
@@ -749,10 +749,20 @@
                 <td class="px-6 py-4">Layer 0.12mm, Infill 100%</td>
                 <td class="px-6 py-4 text-emerald-400 font-bold">✓ PASSED (Friction Fit)</td>
               </tr>
-              <tr class="hover:bg-slate-800/40 transition-colors bg-cyan-950/20">
+              <tr class="hover:bg-slate-800/40 transition-colors bg-cyan-950/30">
                 <td class="px-6 py-4 font-bold text-cyan-300 flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                  xiaozhi_gc9a01_adapter.scad (Ngàm CRT)
+                  musedy_computer_18_adapter.scad (Ngàm 1.8" Landscape)
+                </td>
+                <td class="px-6 py-4">48.40 x 48.00 x 3.40 mm</td>
+                <td class="px-6 py-4 text-slate-200">PLA+ / Resin Trắng Kem</td>
+                <td class="px-6 py-4">Layer 0.12mm, Infill 100%</td>
+                <td class="px-6 py-4 text-emerald-400 font-bold">✓ PASSED (ST7735 160x128)</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40 transition-colors bg-slate-900/30">
+                <td class="px-6 py-4 font-medium text-slate-300 flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                  xiaozhi_gc9a01_adapter.scad (Ngàm GC9A01 Tròn)
                 </td>
                 <td class="px-6 py-4">48.40 x 48.00 x 3.40 mm</td>
                 <td class="px-6 py-4 text-slate-200">PLA+ / Resin Trắng Kem</td>

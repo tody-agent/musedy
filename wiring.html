@@ -124,7 +124,7 @@
         <span class="text-white/20 hidden sm:inline">|</span>
         <span class="hidden sm:inline text-slate-400">CORE: ESP32-S3 DUAL-CORE 240MHz</span>
         <span class="hidden md:inline text-white/20">|</span>
-        <span class="hidden md:inline text-slate-400">DISPLAY: 240x240 GC9A01 SPI &amp; ST7789</span>
+        <span class="hidden md:inline text-slate-400">DISPLAY: 1.8" LANDSCAPE 160x128 (ST7735 / ST7789)</span>
       </div>
       <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
         <span class="text-cyan-400 text-[11px] sm:text-xs font-semibold">FW: v1.2-MUSEDY</span>
@@ -219,28 +219,28 @@
             <div class="flex items-center justify-between pb-3 mb-4 border-b border-white/10">
               <span class="flex items-center gap-2 text-cyan-400 font-bold text-sm">
                 <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-                1. MÀN HÌNH TRÒN 1.28" GC9A01 (SPI MASTER)
+                1. MÀN HÌNH 1.8" TFT 160x128 XOAY NGANG (ST7735 / ST7789 SPI)
               </span>
               <span class="text-xs font-mono text-slate-400">40MHz SPI</span>
             </div>
             <table class="w-full text-xs font-mono">
               <thead class="text-slate-400 border-b border-white/5">
-                <tr><th class="py-2">Chân GC9A01</th><th>Chân ESP32-S3</th><th>Màu Dây</th></tr>
+                <tr><th class="py-2">Chân 1.8" TFT / GC9A01</th><th>Chân ESP32-S3</th><th>Màu Dây</th></tr>
               </thead>
               <tbody class="divide-y divide-white/5 text-slate-300">
-                <tr><td class="py-2 font-bold text-white">VCC</td><td class="text-cyan-400">3.3V</td><td>Đỏ</td></tr>
+                <tr><td class="py-2 font-bold text-white">VCC</td><td class="text-cyan-400">3.3V (hoặc 5V)</td><td>Đỏ</td></tr>
                 <tr><td class="py-2 font-bold text-white">GND</td><td class="text-cyan-400">GND</td><td>Đen</td></tr>
-                <tr><td class="py-2 font-bold text-white">SCL / SCLK</td><td class="text-cyan-400 font-bold">GPIO 42</td><td>Vàng</td></tr>
+                <tr><td class="py-2 font-bold text-white">SCK / SCL</td><td class="text-cyan-400 font-bold">GPIO 42</td><td>Vàng</td></tr>
                 <tr><td class="py-2 font-bold text-white">SDA / MOSI</td><td class="text-cyan-400 font-bold">GPIO 41</td><td>Xanh lá</td></tr>
-                <tr><td class="py-2 font-bold text-white">DC / RS</td><td class="text-cyan-400 font-bold">GPIO 40</td><td>Cam</td></tr>
-                <tr><td class="py-2 font-bold text-white">RES / RST</td><td class="text-cyan-400 font-bold">GPIO 39</td><td>Trắng</td></tr>
+                <tr><td class="py-2 font-bold text-white">A0 / DC</td><td class="text-cyan-400 font-bold">GPIO 40</td><td>Cam</td></tr>
+                <tr><td class="py-2 font-bold text-white">RESET / RES</td><td class="text-cyan-400 font-bold">GPIO 39</td><td>Trắng</td></tr>
                 <tr><td class="py-2 font-bold text-white">CS</td><td class="text-cyan-400 font-bold">GPIO 38</td><td>Xanh dương</td></tr>
-                <tr><td class="py-2 font-bold text-white">BLK (PWM)</td><td class="text-cyan-400 font-bold">GPIO 21</td><td>Tím</td></tr>
+                <tr><td class="py-2 font-bold text-white">LED / BLK (PWM)</td><td class="text-cyan-400 font-bold">GPIO 21</td><td>Tím</td></tr>
               </tbody>
             </table>
           </div>
           <div class="mt-4 pt-3 border-t border-white/10 text-[11px] text-slate-400">
-            * Cáp đi thẳng, chiều dài &le; 48mm để không suy hao tần số cao 40MHz.
+            * Module 1.8" TFT 8 chân (ST7735 / ST7789) dùng chung sơ đồ chân SPI với màn hình tròn GC9A01. Firmware Musedy tự động xoay ngang 160x128.
           </div>
         </div>
 
